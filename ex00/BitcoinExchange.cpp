@@ -54,13 +54,24 @@ Bitcoin::Bitcoin(char *file_name)
 			value_to_find += line[j];
 			j++;
 		}
-		std::cout << "trying to find '" << date_to_find << "'" << std::endl;
 		try {
 			std::cout << date_to_find << " : " << _data.at(date_to_find) * std::atof(value_to_find.c_str()) << BLUE << " (" <<  _data.at(date_to_find) << " * " << std::atof(value_to_find.c_str()) << ")" << RESET << std::endl;
 		}
 		catch(const std::exception& e)
 		{
-			std::cout << "Need to go for the precedent one" << std::endl;
+    		std::map<std::string, float>::iterator it = _data.upper_bound(date_to_find);
+    		if (it != _data.begin())
+			{
+    		    --it; // Décrémente l'itérateur si ce n'est pas déjà le début
+    		    std::pair<const std::string, float>& lower = *it;
+				std::string previous_date = lower.first;
+				float		previous_value = lower.second;
+				std::cout << previous_date << " : " << _data.at(previous_date) * previous_value << BLUE << " (" << _data.at(previous_date) << " * " << previous_value << ")" << RESET <<std::endl;
+    		}
+			else
+			{
+    		    std::cout << "No previous element found." << std::endl;
+    		}
 		}
 		i++;
 	}
