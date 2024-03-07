@@ -12,7 +12,7 @@ Bitcoin::Bitcoin(char *file_name)
 	if (isGood() == false)
 	{
 		std::cout << "Exit Safely.";
-		exit(1);
+		return ;
 	}
 	std::string line;
 	std::string date_to_find;
@@ -29,7 +29,7 @@ Bitcoin::Bitcoin(char *file_name)
 		catch(const std::exception& e)
 		{
 			std::cerr << e.what() << '\n';
-			exit(1);
+			return ;
 		}
 
 		while (line[j] == ' ' || line[j] == '\t')
@@ -54,7 +54,8 @@ Bitcoin::Bitcoin(char *file_name)
 			value_to_find += line[j];
 			j++;
 		}
-		try {
+		try
+		{
 			std::cout << date_to_find << " : " << _data.at(date_to_find) * std::atof(value_to_find.c_str()) << BLUE << " (" <<  _data.at(date_to_find) << " * " << std::atof(value_to_find.c_str()) << ")" << RESET << std::endl;
 		}
 		catch(const std::exception& e)
@@ -65,12 +66,12 @@ Bitcoin::Bitcoin(char *file_name)
     		    --it; // Décrémente l'itérateur si ce n'est pas déjà le début
     		    std::pair<const std::string, float>& lower = *it;
 				std::string previous_date = lower.first;
-				float		previous_value = lower.second;
-				std::cout << previous_date << " : " << _data.at(previous_date) * previous_value << BLUE << " (" << _data.at(previous_date) << " * " << previous_value << ")" << RESET <<std::endl;
+				// float		previous_value = lower.second;
+				std::cout << _data.at(previous_date) * std::atof(value_to_find.c_str()) << BLUE << " (" << _data.at(previous_date) << " * " << std::atof(value_to_find.c_str()) << " from " << previous_date << ")" << RESET <<std::endl;
     		}
 			else
 			{
-    		    std::cout << "No previous element found." << std::endl;
+    		    std::cout << RED << "No Previous Data Found." << RESET << std::endl;
     		}
 		}
 		i++;
@@ -124,66 +125,6 @@ void	Bitcoin::setMap()
 	}
 }
 
-//Marche pas jsp pk
-void	Bitcoin::printMap(std::map<std::string, float>map_to_print)
-{
-	std::map<std::string, float>::iterator it = map_to_print.begin();
-	std::map<std::string, float>::iterator ite = map_to_print.end();
-	while (it != ite)
-	{
-		std::cout << it->first << " = " << "'" << it->second << "'" << std::endl;
-		++it;
-	}
-}
-
-// void	Bitcoin::setMap()
-// {
-// 	std::map<std::string, float> _map;
-// 	std::string buff_date;
-// 	std::string buff_value;
-// 	int j = 0;
-	
-// 	while (_raw[j] != '\n') //skip la premiere ligne
-// 		j++;
-// 	j++;
-// 	for (unsigned int i = 0; i < _len_data; i++)
-// 	{
-// 		buff_date = "";
-// 		buff_value = "";
-// 		while (_raw[j] == ' ' || _raw[j] == '\t')
-// 			j++;
-// 		while (_raw[j] != ' ' && _raw[j] != '\t')
-// 		{
-// 			if (_raw[j] != '\n')
-// 				buff_date += _raw[j];
-// 			j++;
-// 		}
-// 		while ((_raw[j] == ' ' || _raw[j] == '\t') && _raw[j] != '\n')
-// 			j++;
-// 		j++;
-// 		while ((_raw[j] == ' ' || _raw[j] == '\t') && _raw[j] != '\n')
-// 			j++;
-// 		while (_raw[j] != ' ' && _raw[j] != '\t' && _raw[j] != '\n')
-// 		{
-// 			if (_raw[j] != '\n')
-// 				buff_value += _raw[j];
-// 			j++;
-// 		}
-// 		while (_raw[j] != '\n')
-// 			j++;
-// 		_map[buff_date] = std::atof(buff_value.c_str());
-// 	}
-// 	if (_map.size() != _len_data)
-// 		throw doubleData();
-// 	std::map<std::string, float>::iterator it = _map.begin();
-// 	std::map<std::string, float>::iterator ite = _map.end();
-// 	while (it != ite)
-// 	{
-// 		std::cout << it->first << " = " << "'" << it->second << "'" << std::endl;
-// 		++it;
-// 	}
-// }
-
 void	Bitcoin::setFileName(const char *name)
 {
 	_file_name = name;
@@ -202,12 +143,10 @@ bool Bitcoin::isGood()
 	while (std::getline(myfile, line, '\n'))
 	{
 		int	i = 0;
-		if (line.empty())
-			break;
+		if (line.empty() || line == "date,exchange_rate")
+			continue;
 		buff_date = "";
 		buff_value = "";
-		if (line == "date,exchange_rate")
-			continue;
 		while (line[i] != ',' && line[i] != '\0')
 		{
 			buff_date += line[i];
@@ -223,37 +162,6 @@ bool Bitcoin::isGood()
 	}
 	return (std::cout << "DataBase of size " << GREEN << _data.size() << RESET << " has been converted into a map." << std::endl, true);	 
 }
-
-// bool Bitcoin::isGood(const char *file)
-// {
-// 	std::ifstream myfile(file);
-// 	if (myfile.is_open() == false)
-// 	{
-// 		std::cout << "Error opening file : '" << file << "' not found." << std::endl;
-// 		return (false);
-// 	}
-// 	std::string line;
-// 	std::string buff;
-// 	int i = 0;
-// 	while (std::getline(myfile, line, '\n'))
-// 	{
-// 		try
-// 		{
-// 			checkLine(line, i);
-// 			buff = buff + line;
-// 			buff += '\n';
-// 		}
-// 		catch(const std::exception& e)
-// 		{
-// 			std::cerr << e.what() << '\n';
-// 			return (false);
-// 		}
-// 		i++;
-// 	}
-// 	_len_data = i - 1; //-1 pour le \n de fin
-// 	_raw = buff;
-// 	return true;	 
-// }
 
 bool	Bitcoin::checkLine(const std::string line, int index)
 {

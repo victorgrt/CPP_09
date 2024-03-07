@@ -7,6 +7,9 @@ int	main(int ac, char **av)
 	std::string tmp = av[1];
 	if (tmp.empty())
 		return (std::cout << "File name must not be empty\n", 0);
+	std::ifstream try_open(av[1]);
+	if (try_open.is_open() == false)
+		return (std::cout << "Error opening the file.", 0); 
 	Bitcoin btc(av[1]);
 	return (0);
 }
