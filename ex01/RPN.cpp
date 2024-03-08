@@ -18,10 +18,28 @@ void	RPN::substraction()
 	_stack.push(tmp2 - tmp1);	
 }
 
-// void	RPN::multiple()
-// {
+void	RPN::multiple()
+{
+	int	tmp1 = _stack.top();
+	_stack.pop();
+	int	tmp2 = _stack.top();
+	_stack.pop();
+	_stack.push(tmp2 * tmp1);	
+}
 
-// }
+void	RPN::divide()
+{
+	int	tmp1 = _stack.top();
+	_stack.pop();
+	if (tmp1 == 0)
+	{
+		std::cout << "ERROR DIVISION PAR 0 " << std::endl;
+		return ;
+	}
+	int	tmp2 = _stack.top();
+	_stack.pop();
+	_stack.push(tmp2 / tmp1);	
+}
 
 RPN::RPN(char *arg){
 	std::cout << arg << std::endl;
@@ -41,8 +59,12 @@ RPN::RPN(char *arg){
 				add();
 			else if (arg[i] == '-')
 				substraction();
-			// else if (arg[i] == '*')
-			// 	multiple();
+			else if (arg[i] == '*')
+				multiple();
+			else if (arg[i] == '/')
+				divide();
+			else
+				std::cout << "ERROR BAD CHAR" << std::endl;
 		}
 		i++;
 	}

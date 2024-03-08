@@ -31,6 +31,7 @@ class RPN {
 		void	add();
 		void	substraction();
 		void	multiple();
+		void	divide();
 };
 
 #endif
