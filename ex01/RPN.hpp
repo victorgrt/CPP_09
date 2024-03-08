@@ -19,6 +19,7 @@ class RPN {
 		std::stack<int> _stack;
 		int	_operandes;
 		int	_operateurs;
+		int	_res;
 	
 	public :
 		RPN();
@@ -26,6 +27,10 @@ class RPN {
 		~RPN();
 		RPN(const RPN &copie);
 		RPN &operator=(const RPN &copie);
+
+		void	add();
+		void	substraction();
+		void	multiple();
 };
 
 #endif
