@@ -1,7 +1,5 @@
 #include "RPN.hpp"
 
-//aller jusqua operateur et je sort les deux derniers et j'opere
-
 /*
 Check digit entre 0 et 9
 Check que des digits et operateurs
@@ -31,8 +29,6 @@ bool	goodArgs(char *av)
 			return (false);
 		i++;
 	}
-	std::cout << "operandes : " << operandes << std::endl;
-	std::cout << "operateurs : " << operateurs << std::endl;
 	i -= 1;
 	if (av[i] != '+' && av[i] != '/' && av[i] != '*' && av[i] != '-')
 		return (false);

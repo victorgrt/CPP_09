@@ -17,9 +17,6 @@
 class RPN {
 	private :
 		std::stack<int> _stack;
-		int	_operandes;
-		int	_operateurs;
-		int	_res;
 	
 	public :
 		RPN();
@@ -32,6 +29,7 @@ class RPN {
 		void	substraction();
 		void	multiple();
 		void	divide();
+		void	printStack();
 };
 
 #endif

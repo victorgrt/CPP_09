@@ -33,7 +33,7 @@ void	RPN::divide()
 	_stack.pop();
 	if (tmp1 == 0)
 	{
-		std::cout << "ERROR DIVISION PAR 0 " << std::endl;
+		std::cout << "ERROR : Cannot divide by zero. " << std::endl;
 		return ;
 	}
 	int	tmp2 = _stack.top();
@@ -41,20 +41,21 @@ void	RPN::divide()
 	_stack.push(tmp2 / tmp1);	
 }
 
-RPN::RPN(char *arg){
-	std::cout << arg << std::endl;
-	_res = 0;
+RPN::RPN(char *arg)
+{
 	int i = 0;
-	std::stack<int> tmp;
+
 	while (arg[i] != '\0')
 	{
 		if (arg[i] <= '9' && arg[i] >= '0')
-		{
 			_stack.push(static_cast<int>(arg[i] - 48));
+		else if (arg[i] == ' ')
+		{
+			i++;
+			continue;
 		}
 		else if (!isdigit(arg[i]) && _stack.size() >= 2)
 		{
-			//je prends les deux derniers et je les sorts et calcul
 			if (arg[i] == '+')
 				add();
 			else if (arg[i] == '-')
@@ -64,18 +65,64 @@ RPN::RPN(char *arg){
 			else if (arg[i] == '/')
 				divide();
 			else
-				std::cout << "ERROR BAD CHAR" << std::endl;
+			{
+				std::cout << "ERROR : bad character : '" << arg[i] << "'" << std::endl;
+				return ;
+			}
 		}
 		i++;
 	}
-	tmp = _stack;
-	while (!tmp.empty()) {
+	std::cout << _stack.top() << std::endl;
+}
+
+void	RPN::printStack()
+{
+	std::stack<int> tmp = _stack;
+	while (!tmp.empty())
+	{
         std::cout << tmp.top() <<" ";
         tmp.pop();
-    }
+	}
 }
 
 RPN::~RPN()
 {
+	std::cout << RED << "Fin du programme." << RESET << std::endl;
+}
 
+RPN::RPN()
+{
+	std::cout << GREEN << "Il se passe R." << RESET << std::endl;
+}
+
+RPN::RPN(const RPN &copie)
+{
+	std::stack<int> tmp;
+
+	if (this != &copie)
+	{
+		while (tmp.size() != 0)
+		{
+			_stack.push(tmp.top());
+			tmp.pop();
+		}
+	}
+	std::cout << YELLOW << "RPN copié avec succès." << RESET << std::endl;
+}
+
+RPN& RPN::operator=(const RPN &copie)
+{
+	std::stack<int> tmp;
+	tmp = copie._stack;
+
+	if (!copie._stack.empty())
+	{
+		while (tmp.size() != 0)
+		{
+			_stack.push(tmp.top());
+			tmp.pop();
+		}
+	}
+	std::cout << BLUE << "RPN copié via opérateur avec succès." << RESET << std::endl;
+	return (*this);
 }
