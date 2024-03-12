@@ -4,6 +4,7 @@
 #include <iostream>
 #include <ctime>
 #include <vector>
+#include <deque>
 #include <algorithm>
 
 #define RESET "\033[0m"
@@ -18,6 +19,7 @@
 class Merger{
 	private :
 		std::vector<int> _vectors;
+		int	_size;
 	public :
 		Merger();
 		Merger(char **av, int ac);
@@ -28,6 +30,8 @@ class Merger{
 		void	printVictor();
 
 		void FordJohnson();
+
+		void getMax(std::deque<int>paires);
 };
 
 

@@ -43,8 +43,10 @@ int	main(int ac, char **av)
 	//We print the arg and "Before :"
 	try
 	{
+		//Initialisation de la classe,
+		//du vecteur et de la size.
 		Merger PmergeMe(av, ac);
-
+		
 		//Sorting with Ford-Johnson
 		PmergeMe.FordJohnson();
 	
