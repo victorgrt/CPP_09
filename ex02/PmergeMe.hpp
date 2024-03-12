@@ -2,10 +2,12 @@
 #define PMERGEME_HPP
 
 #include <iostream>
-#include <ctime>
+// #include <ctime>
+#include <sys/time.h>
 #include <vector>
 #include <deque>
 #include <algorithm>
+#include <iterator>
 
 #define RESET "\033[0m"
 #define BOLD "\033[1m"
@@ -19,6 +21,7 @@
 class Merger{
 	private :
 		std::vector<int> _vectors;
+		std::deque<int> _dq;
 		int	_size;
 	public :
 		Merger();
@@ -27,12 +30,43 @@ class Merger{
 		Merger &operator=(const Merger &copie);
 		~Merger();
 
-		void	printVictor();
 
 		void FordJohnson();
 
-		void getMax(std::deque<int>paires);
+		void	swap(int i, int j);
+		void	before();
+		void	after();
+		void	printTime(time_t start);
+
+		int getMax(std::deque<int>paires, int i);
 };
+
+/*
+template<typename Container>
+void printContainer(const Container& c) {
+    typename Container::const_iterator it = c.begin(); // Utilisation de typename pour indiquer qu'il s'agit d'un type dépendant
+    typename Container::const_iterator ite = c.end(); // Utilisation de typename pour indiquer qu'il s'agit d'un type dépendant
+    while (it != ite) {
+        std::cout << *it << " ";
+        it++;
+    }
+    std::cout << "\n";
+}
+*/
+
+template<typename Container>
+void printContainer(const Container &c) {
+	typename Container::const_iterator it = c.begin();
+	typename Container::const_iterator ite = c.end();
+	while (it != ite)
+	{
+		std::cout << *it << " ";
+		it++;
+	}
+	std::cout << "\n";
+}
+
+long long int getTime();
 
 
 class NOT_DIGIT : public std::exception {
@@ -41,6 +75,11 @@ class NOT_DIGIT : public std::exception {
 };
 
 class OVERFLOW : public std::exception {
+	public:
+		virtual const char *what() const throw();
+};
+
+class MAX_ERROR : public std::exception {
 	public:
 		virtual const char *what() const throw();
 };

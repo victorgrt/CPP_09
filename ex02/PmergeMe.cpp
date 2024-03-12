@@ -3,7 +3,7 @@
 /*DEFAULT CONSTRUCTOR*/
 Merger::Merger()
 {
-	std::cout << GREEN << "Nothing Happens" << std::endl;
+	std::cout << GREEN << "Nothing Happens Noob" << std::endl;
 }
 
 /* NORMAL BEHAVIOR */
@@ -16,49 +16,37 @@ Merger::Merger(char **av, int ac)
 			throw (OVERFLOW());
 		_vectors.push_back(tmp);
 	}
-	std::cout << BLUE << "Before" << RESET << " : ";
-	printVictor();
 	_size = _vectors.size();
-	std::cout << "Size : " << _size << std::endl;
 }
 
 
 /* DESTRUCTEUR */
 Merger::~Merger()
 {
-	std::cout << GREEN << "Merger detruit. Fin du programme." << RESET << std::endl;
+	std::cout << GREEN << "Merger Class Detruite. Fin du programme." << RESET << std::endl;
 }
 
 /* FORD-JOHNSON ALGORITHM */
 void	Merger::FordJohnson()
 {
+	if (_vectors.size() == 2)
+	{
+		if (_vectors.at(0) > _vectors.at(1))
+			swap(0, 1);
+		return;
+	}
+
 	//Regrouper les éléments en n/2 paires
-	std::deque<int> paires;
 	for (int i = 0; i < _size; i++)
 	{
-		if (_size % 2 == 0)
-		{
-			paires.push_front(_vectors[i]);
-			i++;
-			paires.push_back(_vectors[i]);
-		}
-	}
-	// paires.push_front(_vectors[0]);
-	// paires.push_back(_vectors[1]);
-
-
-	std::deque<int>::iterator it = paires.begin();
-	std::deque<int>::iterator ite = paires.end();
-	while (it != ite)
-	{
-		std::cout << *it << std::endl;
-		++it;
+		_dq.push_back(_vectors[i]);
 	}
 
 	// Determiner le plus grand pour chaques paires.
-	getMax(paires);
+	for (int i = 0; i < _size - 1; i+=2)
+		getMax(_dq, i);
 
-	//Crier recursivement les plus grands pour chaques paires
+	//Trier recursivement les plus grands pour chaques paires
 	// par ordre croissant pour avoir une Section? et
 	// le mettre au debut de notre container.
 	
@@ -66,28 +54,71 @@ void	Merger::FordJohnson()
 }
 
 /* UTILS */
-void	Merger::getMax(std::deque<int>paires)
+void	Merger::swap(int i, int j)
 {
-	std::cout << "Max : ";
-	if (paires.front() > paires.back())
-		std::cout << paires.front() << std::endl;
-	else
-		std::cout << paires.back() << std::endl;
+	int	tmp;
+
+	tmp = _vectors.at(i);
+	_vectors.at(i) = _vectors.at(j);
+	_vectors.at(j) = tmp; 
 }
 
-void	Merger::printVictor()
+int	Merger::getMax(std::deque<int>paires, int i)
 {
-	std::vector<int>::iterator it = _vectors.begin();
-	std::vector<int>::iterator ite = _vectors.end();
-	while (it != ite)
+	if (_size % 2 == 0 && i < _size - 1)
 	{
-		std::cout << *it << " ";
-		it++;
+		std::cout << "Max between " << paires.at(i) << " and " << paires.at(i + 1) << " : ";
+		if (paires.at(i) < paires.at(i + 1))
+		{
+			std::cout << paires.at(i + 1) << std::endl;
+			return (paires.at(i + 1));
+		}
+		else
+		{
+			std::cout << paires.at(i) << std::endl;
+			return (paires.at(i));
+		}
 	}
-	std::cout << "\n";
+	else if (_size % 2 != 0 && i < _size - 2)
+	{
+		std::cout << "Max between " << paires.at(i) << " and " << paires.at(i + 1) << " : ";
+		if (paires.at(i) < paires.at(i + 1))
+		{
+			std::cout << paires.at(i + 1) << std::endl;
+			return (paires.at(i + 1));
+		}
+		else
+		{
+			std::cout << paires.at(i) << std::endl;
+			return (paires.at(i));
+		}
+		
+	}
+	throw (MAX_ERROR());
 }
 
-/* ERRORS */
+/*PRINTER*/
+
+
+void	Merger::after()
+{
+	std::cout << MAGENTA << "After" << RESET << " : " << RESET;
+	printContainer(_vectors);
+}
+
+void	Merger::before()
+{
+	std::cout << BLUE << "Before" << RESET << " : ";
+	printContainer(_vectors);
+}
+
+void	Merger::printTime(time_t start)
+{
+	long long int ending_time = getTime(); 
+	std::cout << "Temps d'execution : " << BLUE << (ending_time - start) << "ms" << RESET << std::endl;
+}
+
+/* EXCEPTIONS */
 const char *NOT_DIGIT::what(void) const throw()
 {
 	const char *error = "\033[1;31mError\033[0m : All Arguments Need to Be Positiv Digit";
@@ -97,5 +128,11 @@ const char *NOT_DIGIT::what(void) const throw()
 const char *OVERFLOW::what(void) const throw()
 {
 	const char *error = "\033[1;31mError\033[0m : Int Overflow Detected.";
+	return (error);
+}
+
+const char *MAX_ERROR::what(void) const throw()
+{
+	const char *error = "\033[1;31mError\033[0m : Int Max Couldn't Be Found.";
 	return (error);
 }
