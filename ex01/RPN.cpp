@@ -87,7 +87,7 @@ void	RPN::printStack()
 
 RPN::~RPN()
 {
-	std::cout << RED << "Fin du programme." << RESET << std::endl;
+	std::cout << GREEN << "Fin du programme." << RESET << std::endl;
 }
 
 RPN::RPN()
@@ -125,4 +125,63 @@ RPN& RPN::operator=(const RPN &copie)
 	}
 	std::cout << BLUE << "RPN copié via opérateur avec succès." << RESET << std::endl;
 	return (*this);
+}
+
+int len(char *str)
+{
+	int i = 0;
+	while (str[i] != '\0')
+		i++;
+	return (i);
+}
+
+bool	goodArgs(char *av)
+{
+	int	i = 0;
+	int	operateurs = 0;
+	int	operandes = 0;
+
+	while (av[i] != '\0')
+	{
+		if (av[i] == '\0')
+			break;
+		if (av[i] == ' ')
+		{
+			i++;
+			continue;
+		}
+		else if (av[i] <= '9' && av[i] >= '0' && av[i + 1] == ' ')
+			operandes++;
+		else if (av[i] == '+' || av[i] == '-' || av[i] == '*' || av[i] == '/')
+			operateurs++;
+		else if (av[i] != '+' && av[i] != '-' && av[i] != '/' && av[i] != '*' && (!(av[i] >= '0' && av[i] <= '9')))
+			throw (ARGUMENT_BAD());
+		else
+			throw (OPERATORS_BADEND());
+		i++;
+	}
+	i -= 1;
+	if (av[i] != '+' && av[i] != '/' && av[i] != '*' && av[i] != '-')
+		throw (OPERATORS_BADEND());
+	if (operateurs != operandes - 1)
+		throw (OPERATORS_ERROR());
+	return (true);
+}
+
+const char *OPERATORS_ERROR::what(void) const throw()
+{
+	const char *error = "\033[1;31mError\033[0m : Should Have For N Numbers N-1 Operators.";
+	return (error);
+}
+
+const char *OPERATORS_BADEND::what(void) const throw()
+{
+	const char *error = "\033[1;31mError\033[0m : Argument Should End With Operator.";
+	return (error);
+}
+
+const char *ARGUMENT_BAD::what(void) const throw()
+{
+	const char *error = "\033[1;31mError\033[0m : Forbidden Or Unknown Char Detected.";
+	return (error);
 }

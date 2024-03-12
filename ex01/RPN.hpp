@@ -25,11 +25,30 @@ class RPN {
 		RPN(const RPN &copie);
 		RPN &operator=(const RPN &copie);
 
+
 		void	add();
 		void	substraction();
 		void	multiple();
 		void	divide();
 		void	printStack();
 };
+
+bool	goodArgs(char *av);
+
+class OPERATORS_ERROR : public std::exception {
+	public:
+		virtual const char *what() const throw();
+};
+
+class OPERATORS_BADEND : public std::exception {
+	public:
+		virtual const char *what() const throw();
+};
+
+class ARGUMENT_BAD : public std::exception {
+	public:
+		virtual const char *what() const throw();
+};
+
 
 #endif
