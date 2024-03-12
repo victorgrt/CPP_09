@@ -39,11 +39,12 @@ bool	goodArgs(char *av)
 
 int	main(int ac, char **av)
 {
-	std::stack<int> ma_stack;
-	if (ac != 2)
-		return (std::cout << "Bad Usage." << std::endl, 0);
-	if (goodArgs(av[1]) == false)
-		return (std::cout << "Bad Arguments." << std::endl, 0);
-	RPN reverse(av[1]);
+	{
+		if (ac != 2)
+			return (std::cout << "Bad Usage." << std::endl, 0);
+		if (goodArgs(av[1]) == false)
+			return (std::cout << "Bad Arguments." << std::endl, 0);
+		RPN reverse(av[1]);
+	}
 	return (0);
 }
