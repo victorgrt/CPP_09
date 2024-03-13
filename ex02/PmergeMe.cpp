@@ -1,5 +1,4 @@
 #include "PmergeMe.hpp"
-
 /*DEFAULT CONSTRUCTOR*/
 Merger::Merger()
 {
@@ -19,6 +18,10 @@ Merger::Merger(char **av, int ac)
 	_size = _vectors.size();
 }
 
+std::vector<int> Merger::getVector()
+{
+	return (_vectors);
+}
 
 /* DESTRUCTEUR */
 Merger::~Merger()
@@ -26,41 +29,115 @@ Merger::~Merger()
 	std::cout << GREEN << "Merger Class Detruite. Fin du programme." << RESET << std::endl;
 }
 
-/* FORD-JOHNSON ALGORITHM */
-void	Merger::FordJohnson()
+void	Merger::FordJohnson2()
 {
-	if (_vectors.size() == 2)
+	std::vector<int>main;
+	std::vector<int>tmp;
+
+	for (size_t i = 0; i < _vectors.size() - 1; i += 2)
 	{
-		if (_vectors.at(0) > _vectors.at(1))
-			swap(0, 1);
-		return;
+		if (_vectors[i] > _vectors[i + 1])
+		{
+			std::swap(_vectors[i], _vectors[i+1]);
+		}
 	}
-
-	//Regrouper les éléments en n/2 paires
-	for (int i = 0; i < _size; i++)
+	if (_vectors.size() > 2)
 	{
-		_dq.push_back(_vectors[i]);
-	}
-
-	// Determiner le plus grand pour chaques paires.
-	for (int i = 0; i < _size - 1; i+=2)
-		getMax(_dq, i);
-
-	//Trier recursivement les plus grands pour chaques paires
-	// par ordre croissant pour avoir une Section? et
-	// le mettre au debut de notre container.
-	
-	//Ca part en couilles.
+		for (size_t i = 0; i < _vectors.size(); i += 2)
+		{
+			main.push_back(_vectors[i]);
+			if (i < _vectors.size() - 1)
+				tmp.push_back(_vectors[i + 1]);
+		}
+		FordJohnson(main);
+		size_t psize = tmp.size();
+		for (size_t i = 0; i < psize; i++)
+		{
+			size_t j = 0;
+			size_t sortIndex = 0;
+			for (; _jackob(j) < i; j++){}
+			if (j)
+			{
+				if (_jackob(j) >= psize - 1)
+					sortIndex = psize - (i - _jackob(j - 1));
+				else
+					sortIndex = _jackob(j) + 1 - (i - _jackob(j - 1));
+			}
+			binarySearch(main, tmp[sortIndex]);
+		}
+		_vectors = main;
+	}	
 }
 
-/* UTILS */
-void	Merger::swap(int i, int j)
+/* FORD-JOHNSON ALGORITHM */
+void	Merger::FordJohnson(std::vector<int>&to_sort)
 {
-	int	tmp;
+	std::vector<int>main;
+	std::vector<int>tmp;
 
-	tmp = _vectors.at(i);
-	_vectors.at(i) = _vectors.at(j);
-	_vectors.at(j) = tmp; 
+	for (size_t i = 0; i < to_sort.size() - 1; i += 2)
+	{
+		if (to_sort[i] > to_sort[i + 1])
+		{
+			std::swap(to_sort[i], to_sort[i+1]);
+		}
+	}
+	if (to_sort.size() > 2)
+	{
+		for (size_t i = 0; i < to_sort.size(); i += 2)
+		{
+			main.push_back(to_sort[i]);
+			if (i < to_sort.size() - 1)
+				tmp.push_back(to_sort[i + 1]);
+		}
+		FordJohnson(main);
+		size_t psize = tmp.size();
+		for (size_t i = 0; i < psize; i++)
+		{
+			size_t j = 0;
+			size_t sortIndex = 0;
+			for (; _jackob(j) < i; j++){}
+			if (j)
+			{
+				if (_jackob(j) >= psize - 1)
+					sortIndex = psize - (i - _jackob(j - 1));
+				else
+					sortIndex = _jackob(j) + 1 - (i - _jackob(j - 1));
+			}
+			binarySearch(main, tmp[sortIndex]);
+		}
+		to_sort = main;
+	}	
+}
+
+void	Merger::binarySearch(std::vector<int>&main, int value)
+{
+	int	low = 0;
+	int high = main.size() - 1;
+
+	while (low <= high)
+	{
+		int mid = low + (high - low) / 2;
+		if (main[mid] == value)
+		{
+			return;
+		}
+		else if (main[mid] < value)
+			low = mid + 1;
+		else
+			high = mid - 1;
+	}
+	main.insert(main.begin() + low, value);
+}
+
+unsigned int Merger::_jackob(unsigned int n)
+{
+	if (n == 0)
+		return (0);
+	else if (n == 1)
+		return (1);
+	else
+		return (_jackob(n - 1) + 2 * _jackob(n - 2));
 }
 
 int	Merger::getMax(std::deque<int>paires, int i)
@@ -98,12 +175,13 @@ int	Merger::getMax(std::deque<int>paires, int i)
 }
 
 /*PRINTER*/
-
-
-void	Merger::after()
+void	Merger::after(std::vector<int>&to_print)
 {
 	std::cout << MAGENTA << "After" << RESET << " : " << RESET;
-	printContainer(_vectors);
+	if (!to_print.empty())
+		printContainer(to_print);
+	else 
+		printContainer(_vectors);
 }
 
 void	Merger::before()
@@ -121,7 +199,7 @@ void	Merger::printTime(time_t start)
 /* EXCEPTIONS */
 const char *NOT_DIGIT::what(void) const throw()
 {
-	const char *error = "\033[1;31mError\033[0m : All Arguments Need to Be Positiv Digit";
+	const char *error = "\033[1;31mError\033[0m : All Arguments Need to Be Positive Digit";
 	return (error);
 }
 

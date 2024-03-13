@@ -45,23 +45,23 @@ int	main(int ac, char **av)
 
 	try
 	{
-		//Initialisation de la classe,
-		//du vecteur et de la size.
+		//Initialisation
 		Merger PmergeMe(av, ac);
-
-		//Uno elemento
 		if (ac == 2)
 		{
-			std::cout << "ici" << std::endl;
+			std::vector<int>empty;
 			PmergeMe.before();
-			PmergeMe.after();
+			PmergeMe.after(empty);
 			PmergeMe.printTime(starting_time);
 			return (0);
 		}
-
+		// std::vector<int>empty;
+		//Print du before
 		PmergeMe.before();
-		PmergeMe.FordJohnson();
-		PmergeMe.after();
+		std::vector<int>tmp = PmergeMe.getVector();
+		PmergeMe.FordJohnson(tmp);
+		// PmergeMe.FordJohnson2();
+		PmergeMe.after(tmp);
 		PmergeMe.printTime(starting_time);
 
 	}

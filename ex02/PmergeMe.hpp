@@ -1,5 +1,4 @@
-#ifndef PMERGEME_HPP
-#define PMERGEME_HPP
+#pragma once
 
 #include <iostream>
 // #include <ctime>
@@ -7,6 +6,7 @@
 #include <vector>
 #include <deque>
 #include <algorithm>
+#include <sstream>
 #include <iterator>
 
 #define RESET "\033[0m"
@@ -21,7 +21,9 @@
 class Merger{
 	private :
 		std::vector<int> _vectors;
-		std::deque<int> _dq;
+		
+		std::vector<int>_main;
+		std::vector<int>_tmp;
 		int	_size;
 	public :
 		Merger();
@@ -30,29 +32,32 @@ class Merger{
 		Merger &operator=(const Merger &copie);
 		~Merger();
 
+		//main algo
+		void FordJohnson(std::vector<int>&to_sort);
+		void FordJohnson2();
 
-		void FordJohnson();
+		std::vector<int>getVector();
+		void			setVector(std::vector<int>&to_set);
 
-		void	swap(int i, int j);
+		int	getPivot(std::vector<int>&sequence, int low, int high);
+		void	recursive_sort(std::vector<int>&sequence, int low, int high);
+		void	binarySearch(std::vector<int>&main, int value);
+
+		unsigned int _jackob(unsigned int n);
+		//swap twho values
+		// void	swap(std::vector<int>&vec, int i, int j);
+		
+		//printing utils
 		void	before();
-		void	after();
+		void	after(std::vector<int>&toprint);
 		void	printTime(time_t start);
 
+		//get the max value for paires[i] and paires[i+1]
 		int getMax(std::deque<int>paires, int i);
 };
 
-/*
-template<typename Container>
-void printContainer(const Container& c) {
-    typename Container::const_iterator it = c.begin(); // Utilisation de typename pour indiquer qu'il s'agit d'un type dépendant
-    typename Container::const_iterator ite = c.end(); // Utilisation de typename pour indiquer qu'il s'agit d'un type dépendant
-    while (it != ite) {
-        std::cout << *it << " ";
-        it++;
-    }
-    std::cout << "\n";
-}
-*/
+//get the current time in ms
+long long int getTime();
 
 template<typename Container>
 void printContainer(const Container &c) {
@@ -65,9 +70,6 @@ void printContainer(const Container &c) {
 	}
 	std::cout << "\n";
 }
-
-long long int getTime();
-
 
 class NOT_DIGIT : public std::exception {
 	public:
@@ -83,5 +85,3 @@ class MAX_ERROR : public std::exception {
 	public:
 		virtual const char *what() const throw();
 };
-
-#endif
