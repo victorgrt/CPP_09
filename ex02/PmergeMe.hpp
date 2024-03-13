@@ -1,7 +1,6 @@
 #pragma once
 
 #include <iostream>
-// #include <ctime>
 #include <sys/time.h>
 #include <vector>
 #include <deque>
@@ -21,10 +20,9 @@
 class Merger{
 	private :
 		std::vector<int> _vectors;
-		
-		std::vector<int>_main;
-		std::vector<int>_tmp;
+		long long int _starting_time;
 		int	_size;
+		
 	public :
 		Merger();
 		Merger(char **av, int ac);
@@ -33,27 +31,15 @@ class Merger{
 		~Merger();
 
 		//main algo
-		void FordJohnson(std::vector<int>&to_sort);
-		void FordJohnson2();
-
-		std::vector<int>getVector();
-		void			setVector(std::vector<int>&to_set);
-
-		int	getPivot(std::vector<int>&sequence, int low, int high);
-		void	recursive_sort(std::vector<int>&sequence, int low, int high);
+		void	FordJohnson(std::vector<int>&to_sort);
 		void	binarySearch(std::vector<int>&main, int value);
-
 		unsigned int _jackob(unsigned int n);
-		//swap twho values
-		// void	swap(std::vector<int>&vec, int i, int j);
 		
 		//printing utils
 		void	before();
-		void	after(std::vector<int>&toprint);
+		void	after();
 		void	printTime(time_t start);
 
-		//get the max value for paires[i] and paires[i+1]
-		int getMax(std::deque<int>paires, int i);
 };
 
 //get the current time in ms
@@ -77,11 +63,6 @@ class NOT_DIGIT : public std::exception {
 };
 
 class OVERFLOW : public std::exception {
-	public:
-		virtual const char *what() const throw();
-};
-
-class MAX_ERROR : public std::exception {
 	public:
 		virtual const char *what() const throw();
 };

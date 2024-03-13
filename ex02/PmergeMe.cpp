@@ -1,13 +1,32 @@
 #include "PmergeMe.hpp"
-/*DEFAULT CONSTRUCTOR*/
+
+/*CANONICAL FORM*/
 Merger::Merger()
 {
 	std::cout << GREEN << "Nothing Happens Noob" << std::endl;
 }
 
+Merger::Merger(const Merger &copie)
+{
+	(void) copie;
+}
+
+Merger& Merger::operator=(const Merger &copie)
+{
+	(void) copie;
+	return *this;
+}
+
+Merger::~Merger()
+{
+	std::cout << GREEN << "Merger Class Detruite. Fin du programme." << RESET << std::endl;
+}
+//=========================================================//
+
 /* NORMAL BEHAVIOR */
 Merger::Merger(char **av, int ac)
 {
+	_starting_time = getTime();
 	for (int i = 1; i < ac; i++)
 	{
 		long tmp = std::atol(av[i]);
@@ -16,59 +35,13 @@ Merger::Merger(char **av, int ac)
 		_vectors.push_back(tmp);
 	}
 	_size = _vectors.size();
+	before();
+	FordJohnson(_vectors);
+	after();
+	printTime(_starting_time);
 }
 
-std::vector<int> Merger::getVector()
-{
-	return (_vectors);
-}
-
-/* DESTRUCTEUR */
-Merger::~Merger()
-{
-	std::cout << GREEN << "Merger Class Detruite. Fin du programme." << RESET << std::endl;
-}
-
-void	Merger::FordJohnson2()
-{
-	std::vector<int>main;
-	std::vector<int>tmp;
-
-	for (size_t i = 0; i < _vectors.size() - 1; i += 2)
-	{
-		if (_vectors[i] > _vectors[i + 1])
-		{
-			std::swap(_vectors[i], _vectors[i+1]);
-		}
-	}
-	if (_vectors.size() > 2)
-	{
-		for (size_t i = 0; i < _vectors.size(); i += 2)
-		{
-			main.push_back(_vectors[i]);
-			if (i < _vectors.size() - 1)
-				tmp.push_back(_vectors[i + 1]);
-		}
-		FordJohnson(main);
-		size_t psize = tmp.size();
-		for (size_t i = 0; i < psize; i++)
-		{
-			size_t j = 0;
-			size_t sortIndex = 0;
-			for (; _jackob(j) < i; j++){}
-			if (j)
-			{
-				if (_jackob(j) >= psize - 1)
-					sortIndex = psize - (i - _jackob(j - 1));
-				else
-					sortIndex = _jackob(j) + 1 - (i - _jackob(j - 1));
-			}
-			binarySearch(main, tmp[sortIndex]);
-		}
-		_vectors = main;
-	}	
-}
-
+//=========================================================//
 /* FORD-JOHNSON ALGORITHM */
 void	Merger::FordJohnson(std::vector<int>&to_sort)
 {
@@ -140,48 +113,12 @@ unsigned int Merger::_jackob(unsigned int n)
 		return (_jackob(n - 1) + 2 * _jackob(n - 2));
 }
 
-int	Merger::getMax(std::deque<int>paires, int i)
-{
-	if (_size % 2 == 0 && i < _size - 1)
-	{
-		std::cout << "Max between " << paires.at(i) << " and " << paires.at(i + 1) << " : ";
-		if (paires.at(i) < paires.at(i + 1))
-		{
-			std::cout << paires.at(i + 1) << std::endl;
-			return (paires.at(i + 1));
-		}
-		else
-		{
-			std::cout << paires.at(i) << std::endl;
-			return (paires.at(i));
-		}
-	}
-	else if (_size % 2 != 0 && i < _size - 2)
-	{
-		std::cout << "Max between " << paires.at(i) << " and " << paires.at(i + 1) << " : ";
-		if (paires.at(i) < paires.at(i + 1))
-		{
-			std::cout << paires.at(i + 1) << std::endl;
-			return (paires.at(i + 1));
-		}
-		else
-		{
-			std::cout << paires.at(i) << std::endl;
-			return (paires.at(i));
-		}
-		
-	}
-	throw (MAX_ERROR());
-}
-
+//=========================================================//
 /*PRINTER*/
-void	Merger::after(std::vector<int>&to_print)
+void	Merger::after()
 {
 	std::cout << MAGENTA << "After" << RESET << " : " << RESET;
-	if (!to_print.empty())
-		printContainer(to_print);
-	else 
-		printContainer(_vectors);
+	printContainer(_vectors);
 }
 
 void	Merger::before()
@@ -196,6 +133,8 @@ void	Merger::printTime(time_t start)
 	std::cout << "Temps d'execution : " << BLUE << (ending_time - start) << "ms" << RESET << std::endl;
 }
 
+
+//=========================================================//
 /* EXCEPTIONS */
 const char *NOT_DIGIT::what(void) const throw()
 {
@@ -206,11 +145,5 @@ const char *NOT_DIGIT::what(void) const throw()
 const char *OVERFLOW::what(void) const throw()
 {
 	const char *error = "\033[1;31mError\033[0m : Int Overflow Detected.";
-	return (error);
-}
-
-const char *MAX_ERROR::what(void) const throw()
-{
-	const char *error = "\033[1;31mError\033[0m : Int Max Couldn't Be Found.";
 	return (error);
 }
