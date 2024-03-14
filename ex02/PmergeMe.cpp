@@ -5,7 +5,7 @@ Merger::Merger()
 {
 	std::cout << GREEN << "Nothing Happens Noob" << std::endl;
 }
-
+	
 Merger::Merger(const Merger &copie)
 {
 	(void) copie;
@@ -21,12 +21,16 @@ Merger::~Merger()
 {
 	std::cout << GREEN << "Merger Class Detruite. Fin du programme." << RESET << std::endl;
 }
-//=========================================================//
 
+//=========================================================//
 /* NORMAL BEHAVIOR */
 Merger::Merger(char **av, int ac)
 {
+	//geting start time in ms
 	_starting_time = getTime();
+	//checking that everything inside
+	// av is a valid int and push it
+	// into our vector
 	for (int i = 1; i < ac; i++)
 	{
 		long tmp = std::atol(av[i]);
@@ -35,19 +39,26 @@ Merger::Merger(char **av, int ac)
 		_vectors.push_back(tmp);
 	}
 	_size = _vectors.size();
+	//printing the before as required
 	before();
-	FordJohnson(_vectors);
+	//sorting our sequence
+//	FordJohnson(_vectors);
+	fordJohnson(_vectors);
+	//printing our after
 	after();
+	//printing the time it took
 	printTime(_starting_time);
 }
 
 //=========================================================//
 /* FORD-JOHNSON ALGORITHM */
+/*
 void	Merger::FordJohnson(std::vector<int>&to_sort)
 {
 	std::vector<int>main;
 	std::vector<int>tmp;
 
+	//sorting our pairs 2 by 2
 	for (size_t i = 0; i < to_sort.size() - 1; i += 2)
 	{
 		if (to_sort[i] > to_sort[i + 1])
@@ -55,14 +66,19 @@ void	Merger::FordJohnson(std::vector<int>&to_sort)
 			std::swap(to_sort[i], to_sort[i+1]);
 		}
 	}
+	//in case there is more than two
+	//elements
 	if (to_sort.size() > 2)
 	{
+		//we add value in main and the next
+		//one in tmp
 		for (size_t i = 0; i < to_sort.size(); i += 2)
 		{
 			main.push_back(to_sort[i]);
 			if (i < to_sort.size() - 1)
 				tmp.push_back(to_sort[i + 1]);
 		}
+		//we sort the main container
 		FordJohnson(main);
 		size_t psize = tmp.size();
 		for (size_t i = 0; i < psize; i++)
@@ -82,8 +98,9 @@ void	Merger::FordJohnson(std::vector<int>&to_sort)
 		to_sort = main;
 	}	
 }
+*/
 
-void	Merger::binarySearch(std::vector<int>&main, int value)
+/*void	Merger::binarySearch(std::vector<int>&main, int value)
 {
 	int	low = 0;
 	int high = main.size() - 1;
@@ -101,7 +118,7 @@ void	Merger::binarySearch(std::vector<int>&main, int value)
 			high = mid - 1;
 	}
 	main.insert(main.begin() + low, value);
-}
+}*/
 
 unsigned int Merger::_jackob(unsigned int n)
 {

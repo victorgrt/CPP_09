@@ -24,6 +24,8 @@ bool isFullDigit(int ac, char **av)
 	return (true);
 }
 
+#include <stack>
+
 int	main(int ac, char **av)
 {
 	if (ac <= 1)
@@ -42,11 +44,13 @@ int	main(int ac, char **av)
 	try
 	{
 		Merger PmergeMe(av, ac);
+		// std::stack<int>test;
 	}
 	catch(const std::exception& e)
 	{
 		std::cerr << e.what() << '\n';
 		return (0);
 	}
+	//std::cout << BLUE << "TESTING WITH OTHER CONTAINER THAN VECTOR" << RESET << std::endl; 
 	return (0);
 }
