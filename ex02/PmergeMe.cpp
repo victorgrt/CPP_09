@@ -26,38 +26,41 @@ Merger::~Merger()
 /* NORMAL BEHAVIOR */
 Merger::Merger(char **av, int ac)
 {
-	//geting start time in ms
 	_starting_time = getTime();
-	//checking that everything inside
-	// av is a valid int and push it
-	// into our vector
 	for (int i = 1; i < ac; i++)
 	{
 		long tmp = std::atol(av[i]);
 		if (tmp > 2147483647)
 			throw (OVERFLOW());
 		_vectors.push_back(tmp);
+		_queue.push_back(tmp);
 	}
 	_size = _vectors.size();
-	//printing the before as required
 	before();
-	//sorting our sequence
-//	FordJohnson(_vectors);
 	fordJohnson(_vectors);
-	//printing our after
-	after();
-	//printing the time it took
-	printTime(_starting_time);
+	after(_vectors);
+	printTime(_starting_time, 0);
+
+	//SAME THING FOR SECOND CONTAINER
+	_2ndstarting_time = getTime();
+	for (int i = 1; i < ac; i++)
+	{
+		long tmp = std::atol(av[i]);
+		if (tmp > 2147483647)
+			throw (OVERFLOW());
+		_queue.push_back(tmp);
+	}
+	fordJohnson(_queue);
+	printTime(_2ndstarting_time, 1);
 }
 
 //=========================================================//
-/* FORD-JOHNSON ALGORITHM */
-/*
-void	Merger::FordJohnson(std::vector<int>&to_sort)
+/* FORD-JOHNSON UTILS */
+template<typename Container>
+void	Merger::fordJohnson(Container &to_sort)
 {
-	std::vector<int>main;
-	std::vector<int>tmp;
-
+	Container main;
+	Container tmp;
 	//sorting our pairs 2 by 2
 	for (size_t i = 0; i < to_sort.size() - 1; i += 2)
 	{
@@ -79,7 +82,7 @@ void	Merger::FordJohnson(std::vector<int>&to_sort)
 				tmp.push_back(to_sort[i + 1]);
 		}
 		//we sort the main container
-		FordJohnson(main);
+		fordJohnson(main);
 		size_t psize = tmp.size();
 		for (size_t i = 0; i < psize; i++)
 		{
@@ -96,29 +99,28 @@ void	Merger::FordJohnson(std::vector<int>&to_sort)
 			binarySearch(main, tmp[sortIndex]);
 		}
 		to_sort = main;
-	}	
+	}
 }
-*/
 
-/*void	Merger::binarySearch(std::vector<int>&main, int value)
+template <typename Container>
+void	Merger::binarySearch(Container &search, int value)
 {
-	int	low = 0;
-	int high = main.size() - 1;
-
+	int low = 0;
+	int high = search.size() - 1;
+	
 	while (low <= high)
 	{
 		int mid = low + (high - low) / 2;
-		if (main[mid] == value)
-		{
-			return;
-		}
-		else if (main[mid] < value)
-			low = mid + 1;
-		else
-			high = mid - 1;
+		if (search[mid] == value)
+			return ;
+	else if (search[mid] < value)
+		low = mid + 1;
+	else
+		high = mid - 1;
 	}
-	main.insert(main.begin() + low, value);
-}*/
+	search.insert(search.begin() + low, value);
+}
+
 
 unsigned int Merger::_jackob(unsigned int n)
 {
@@ -132,10 +134,11 @@ unsigned int Merger::_jackob(unsigned int n)
 
 //=========================================================//
 /*PRINTER*/
-void	Merger::after()
+template<typename Container>
+void	Merger::after(Container &container)
 {
 	std::cout << MAGENTA << "After" << RESET << " : " << RESET;
-	printContainer(_vectors);
+	printContainer(container);
 }
 
 void	Merger::before()
@@ -144,12 +147,27 @@ void	Merger::before()
 	printContainer(_vectors);
 }
 
-void	Merger::printTime(time_t start)
+void	Merger::printTime(time_t start, int type)
 {
 	long long int ending_time = getTime(); 
-	std::cout << "Temps d'execution : " << BLUE << (ending_time - start) << "ms" << RESET << std::endl;
+	if (type == 0)
+		std::cout << "Temps d'execution avec std::vector : " << BLUE << (ending_time - start) << "ms" << RESET << std::endl;
+	else
+		std::cout << "Temps d'execution avec std::deque : " << BLUE << (ending_time - start) << "ms" << RESET << std::endl;
 }
 
+template<typename Container>
+void printContainer(const Container &c)
+{
+	typename Container::const_iterator it = c.begin();
+	typename Container::const_iterator ite = c.end();
+	while (it != ite)
+	{
+		std::cout << *it << " ";
+		it++;
+	}
+	std::cout << "\n";
+}
 
 //=========================================================//
 /* EXCEPTIONS */
