@@ -23,7 +23,7 @@ class Merger{
 		std::vector<int> _vectors;
 		std::deque<int> _queue;
 		long long int _starting_time;
-		long long int _2ndstarting_time;	
+		long long int _2ndstarting_time;
 		int	_size;
 		
 	public :
@@ -33,21 +33,20 @@ class Merger{
 		Merger &operator=(const Merger &copie);
 		~Merger();
 
-		//main algo
+		bool	checkDoublon(int to_check);
+
+		unsigned int _jackob(unsigned int n);
+		void	before();
+		void	printTime(time_t start, int type);
+
+		template<typename Container>	
+		void	after(Container& container);
+
 		template<typename Container>
 		void	binarySearch(Container &search, int value);
 
 		template<typename Container>
 		void	fordJohnson(Container &to_sort); 
-
-		unsigned int _jackob(unsigned int n);
-		
-		//printing utils
-		void	before();
-		
-		template<typename Container>	
-		void	after(Container& container);
-		void	printTime(time_t start, int type);
 
 };
 
@@ -63,6 +62,11 @@ class NOT_DIGIT : public std::exception {
 };
 
 class OVERFLOW : public std::exception {
+	public:
+		virtual const char *what() const throw();
+};
+
+class DOUBLON : public std::exception {
 	public:
 		virtual const char *what() const throw();
 };

@@ -1,12 +1,38 @@
 #include "BitcoinExchange.hpp"
 
-/*
-Je creer une map remplie de la db. 
-*/
+Bitcoin::Bitcoin()
+{
+	std::cout << BLUE << "Nothing Happens" << RESET << std::endl;
+}
+
+Bitcoin::Bitcoin(const Bitcoin &copie)
+{
+	_map = copie._map;
+	_data = copie._data;
+	_file_name = copie._file_name;
+	_raw = copie._raw;
+	_raw_data = copie._raw_data;
+	_len_data = copie._len_data;
+}
+
+Bitcoin& Bitcoin::operator=(const Bitcoin &copie)
+{
+	if (this != &copie)
+	{
+		_map = copie._map;
+		_data = copie._data;
+		_file_name = copie._file_name;
+		_raw = copie._raw;
+		_raw_data = copie._raw_data;
+		_len_data = copie._len_data;
+	}
+	return (*this);
+}
+
+Bitcoin::~Bitcoin(){}
 
 Bitcoin::Bitcoin(char *file_name)
 {
-
 	setFileName(file_name);
 	std::ifstream myfile(_file_name);
 	if (isGood() == false)
@@ -63,10 +89,9 @@ Bitcoin::Bitcoin(char *file_name)
     		std::map<std::string, float>::iterator it = _data.upper_bound(date_to_find);
     		if (it != _data.begin())
 			{
-    		    --it; // Décrémente l'itérateur si ce n'est pas déjà le début
+    		    --it;
     		    std::pair<const std::string, float>& lower = *it;
 				std::string previous_date = lower.first;
-				// float		previous_value = lower.second;
 				std::cout << _data.at(previous_date) * std::atof(value_to_find.c_str()) << BLUE << " (" << _data.at(previous_date) << " * " << std::atof(value_to_find.c_str()) << " from " << previous_date << ")" << RESET <<std::endl;
     		}
 			else
@@ -75,53 +100,6 @@ Bitcoin::Bitcoin(char *file_name)
     		}
 		}
 		i++;
-	}
-}
-
-void	Bitcoin::setMap()
-{
-	// std::map<std::string, float> _data;
-	std::string buff_date;
-	std::string buff_value;
-	int j = 0;
-	while (_raw[j] != '\n') //skip la premiere ligne
-		j++;
-	j++;
-	for (unsigned int i = 0; i < _len_data; i++)
-	{
-		buff_date = "";
-		buff_value = "";
-		while (_raw[j] == ' ' || _raw[j] == '\t')
-			j++;
-		while (_raw[j] != ' ' && _raw[j] != '\t')
-		{
-			if (_raw[j] != '\n')
-				buff_date += _raw[j];
-			j++;
-		}
-		while ((_raw[j] == ' ' || _raw[j] == '\t') && _raw[j] != '\n')
-			j++;
-		j++;
-		while ((_raw[j] == ' ' || _raw[j] == '\t') && _raw[j] != '\n')
-			j++;
-		while (_raw[j] != ' ' && _raw[j] != '\t' && _raw[j] != '\n')
-		{
-			if (_raw[j] != '\n')
-				buff_value += _raw[j];
-			j++;
-		}
-		while (_raw[j] != '\n')
-			j++;
-		_map[buff_date] = std::atof(buff_value.c_str());
-	}
-	if (_map.size() != _len_data)
-		throw doubleData();
-	std::map<std::string, float>::iterator it = _map.begin();
-	std::map<std::string, float>::iterator ite = _map.end();
-	while (it != ite)
-	{
-		std::cout << it->first << " = " << "'" << it->second << "'" << std::endl;
-		++it;
 	}
 }
 

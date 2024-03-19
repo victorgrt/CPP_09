@@ -7,6 +7,8 @@ long long int getTime()
 	return (tv.tv_sec * 1000000 + tv.tv_usec);
 }
 
+
+//checks of each argument that it is a full of digits
 bool isFullDigit(int ac, char **av)
 {
 	int i = 1;
@@ -42,13 +44,11 @@ int	main(int ac, char **av)
 	try
 	{
 		Merger PmergeMe(av, ac);
-		// std::stack<int>test;
 	}
 	catch(const std::exception& e)
 	{
 		std::cerr << e.what() << '\n';
 		return (0);
 	}
-	//std::cout << BLUE << "TESTING WITH OTHER CONTAINER THAN VECTOR" << RESET << std::endl; 
 	return (0);
 }

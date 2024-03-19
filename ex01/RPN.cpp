@@ -1,5 +1,32 @@
 #include "RPN.hpp"
 
+RPN::RPN()
+{
+	std::cout << GREEN << "Il se passe R." << RESET << std::endl;
+}
+
+RPN::~RPN()
+{
+	std::cout << GREEN << "Fin du programme." << RESET << std::endl;
+}
+
+RPN& RPN::operator=(const RPN &copie)
+{
+	std::stack<int> tmp;
+	tmp = copie._stack;
+
+	if (!copie._stack.empty())
+	{
+		while (tmp.size() != 0)
+		{
+			_stack.push(tmp.top());
+			tmp.pop();
+		}
+	}
+	std::cout << BLUE << "RPN copié via opérateur avec succès." << RESET << std::endl;
+	return (*this);
+}
+
 void	RPN::add()
 {
 	int	tmp1 = _stack.top();
@@ -85,16 +112,6 @@ void	RPN::printStack()
 	}
 }
 
-RPN::~RPN()
-{
-	std::cout << GREEN << "Fin du programme." << RESET << std::endl;
-}
-
-RPN::RPN()
-{
-	std::cout << GREEN << "Il se passe R." << RESET << std::endl;
-}
-
 RPN::RPN(const RPN &copie)
 {
 	std::stack<int> tmp;
@@ -108,64 +125,6 @@ RPN::RPN(const RPN &copie)
 		}
 	}
 	std::cout << YELLOW << "RPN copié avec succès." << RESET << std::endl;
-}
-
-RPN& RPN::operator=(const RPN &copie)
-{
-	std::stack<int> tmp;
-	tmp = copie._stack;
-
-	if (!copie._stack.empty())
-	{
-		while (tmp.size() != 0)
-		{
-			_stack.push(tmp.top());
-			tmp.pop();
-		}
-	}
-	std::cout << BLUE << "RPN copié via opérateur avec succès." << RESET << std::endl;
-	return (*this);
-}
-
-int len(char *str)
-{
-	int i = 0;
-	while (str[i] != '\0')
-		i++;
-	return (i);
-}
-
-bool	goodArgs(char *av)
-{
-	int	i = 0;
-	int	operateurs = 0;
-	int	operandes = 0;
-
-	while (av[i] != '\0')
-	{
-		if (av[i] == '\0')
-			break;
-		if (av[i] == ' ')
-		{
-			i++;
-			continue;
-		}
-		else if (av[i] <= '9' && av[i] >= '0' && av[i + 1] == ' ')
-			operandes++;
-		else if (av[i] == '+' || av[i] == '-' || av[i] == '*' || av[i] == '/')
-			operateurs++;
-		else if (av[i] != '+' && av[i] != '-' && av[i] != '/' && av[i] != '*' && (!(av[i] >= '0' && av[i] <= '9')))
-			throw (ARGUMENT_BAD());
-		else
-			throw (OPERATORS_BADEND());
-		i++;
-	}
-	i -= 1;
-	if (av[i] != '+' && av[i] != '/' && av[i] != '*' && av[i] != '-')
-		throw (OPERATORS_BADEND());
-	if (operateurs != operandes - 1)
-		throw (OPERATORS_ERROR());
-	return (true);
 }
 
 const char *OPERATORS_ERROR::what(void) const throw()

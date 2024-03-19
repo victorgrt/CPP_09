@@ -29,41 +29,39 @@ class Bitcoin
 	public : 
 		Bitcoin();
 		Bitcoin(char *file_name);
+		Bitcoin(const Bitcoin &copie);
+		Bitcoin &operator=(const Bitcoin &copie);
+		~Bitcoin();
 
-		void setMap();
-
-		// bool isGood(const char *file);
-		bool isGood();
 		bool checkLine(const std::string line, int index);
+		bool isGood();
 
 		void	setFileName(const char *name);
-		void	printMap(std::map<std::string, float>map_to_print);
 
-
-	class invalidValue : public std::exception {
-		public:
-			virtual const char *what(void) const throw();
-	};
-
-	class invalidFormat : public std::exception {
-		public:
-			virtual const char *what() const throw();
-	};
-
-	class invalidFirstLine : public std::exception {
-		public:
-			virtual const char *what(void) const throw();
-	};
-
-	class invalidData : public std::exception {
-		public:
-			virtual const char *what(void) const throw();
-	};
-
-	class doubleData : public std::exception {
-		public:
-			virtual const char *what(void) const throw();
-	};
+		class invalidValue : public std::exception {
+			public:
+				virtual const char *what(void) const throw();
+		};
+	
+		class invalidFormat : public std::exception {
+			public:
+				virtual const char *what() const throw();
+		};
+	
+		class invalidFirstLine : public std::exception {
+			public:
+				virtual const char *what(void) const throw();
+		};
+	
+		class invalidData : public std::exception {
+			public:
+				virtual const char *what(void) const throw();
+		};
+	
+		class doubleData : public std::exception {
+			public:
+				virtual const char *what(void) const throw();
+		};
 };
 
 #endif

@@ -32,6 +32,8 @@ Merger::Merger(char **av, int ac)
 		long tmp = std::atol(av[i]);
 		if (tmp > 2147483647)
 			throw (OVERFLOW());
+		else if (checkDoublon(tmp) == false)
+			throw (DOUBLON());
 		_vectors.push_back(tmp);
 		_queue.push_back(tmp);
 	}
@@ -56,12 +58,27 @@ Merger::Merger(char **av, int ac)
 
 //=========================================================//
 /* FORD-JOHNSON UTILS */
+bool	Merger::checkDoublon(int to_check)
+{
+	std::vector<int>::iterator it = _vectors.begin();
+	std::vector<int>::iterator ite = _vectors.end();
+
+	while (it != ite)
+	{
+		if (to_check == *it)
+			return (false);
+		++it;
+	}
+	return (true);
+}
+
 template<typename Container>
 void	Merger::fordJohnson(Container &to_sort)
 {
 	Container main;
 	Container tmp;
-	//sorting our pairs 2 by 2
+	//sorting our pairs two by two till the end
+	//45 0 226 79 5 9
 	for (size_t i = 0; i < to_sort.size() - 1; i += 2)
 	{
 		if (to_sort[i] > to_sort[i + 1])
@@ -69,20 +86,26 @@ void	Merger::fordJohnson(Container &to_sort)
 			std::swap(to_sort[i], to_sort[i+1]);
 		}
 	}
+	//0 45 79 226 5 9 
 	//in case there is more than two
 	//elements
 	if (to_sort.size() > 2)
 	{
-		//we add value in main and the next
-		//one in tmp
+		//we add even in main and odd in tmp
 		for (size_t i = 0; i < to_sort.size(); i += 2)
 		{
 			main.push_back(to_sort[i]);
 			if (i < to_sort.size() - 1)
 				tmp.push_back(to_sort[i + 1]);
 		}
-		//we sort the main container
+		//0 45 79 226 5 9 
+		//main : 0 79 5
+		//tmp : 45 226 9
+		//we sort the main container with recursive
 		fordJohnson(main);
+		//to_sort general = 0 79
+		//main : 0 79
+		//tmp = 45 226 9 5
 		size_t psize = tmp.size();
 		for (size_t i = 0; i < psize; i++)
 		{
@@ -113,11 +136,11 @@ void	Merger::binarySearch(Container &search, int value)
 		int mid = low + (high - low) / 2;
 		if (search[mid] == value)
 			return ;
-	else if (search[mid] < value)
-		low = mid + 1;
-	else
-		high = mid - 1;
-	}
+		else if (search[mid] < value)
+			low = mid + 1;
+		else
+			high = mid - 1;
+	}	
 	search.insert(search.begin() + low, value);
 }
 
@@ -180,5 +203,11 @@ const char *NOT_DIGIT::what(void) const throw()
 const char *OVERFLOW::what(void) const throw()
 {
 	const char *error = "\033[1;31mError\033[0m : Int Overflow Detected.";
+	return (error);
+}
+
+const char *DOUBLON::what(void) const throw()
+{
+	const char *error = "\033[1;31mError\033[0m : Doublon Detected.";
 	return (error);
 }
