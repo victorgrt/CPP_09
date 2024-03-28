@@ -55,9 +55,8 @@ Bitcoin::Bitcoin(char *file_name)
 		catch(const std::exception& e)
 		{
 			std::cerr << e.what() << '\n';
-			return ;
+			continue ;
 		}
-
 		while (line[j] == ' ' || line[j] == '\t')
 			j++;
 		while (line[j] != ' ' && line[j] != '\t')
@@ -146,7 +145,7 @@ bool	Bitcoin::checkLine(const std::string line, int index)
 	int i = 0;
 	std::string buff;
 	if (line.empty())
-		return (false);
+		throw emptyLine();
 	//check la first line pour trouver date, | et value
 	if (index == 0) {
 		while (line[i] == ' ' || line[i] == '\t')
@@ -203,22 +202,43 @@ bool	Bitcoin::checkLine(const std::string line, int index)
 		day_buff += buff[8];
 		day_buff += buff[9];
 		if ((std::atoi(month_buff.c_str()) > 12 || std::atoi(month_buff.c_str()) == 0) || (std::atoi(day_buff.c_str()) == 0 || std::atoi(day_buff.c_str()) > 31))
-				throw invalidData();
+		{
+			throw invalidData();
+		}
 		while (line[i] == '\t' || line[i] == ' ')
 			i++;
 		if (line[i] != '|')
-				throw Bitcoin::invalidFormat();
+			throw Bitcoin::invalidFormat();
 		i++;
 		std::string value_buff;
 		while (line[i] == '\t' || line[i] == ' ')
 			i++;
+		if (line[i] == '\0')
+		{
+			throw valueNotFound();
+		}
+		int f_count = 0;
 		while (line[i] != '\t' && line[i] != ' ' && line[i] != '\0')
 		{
 			value_buff += line[i];
+			if (line[i] == '-')
+				throw negativeNumber();
+			if (line[i] == 'f')
+				f_count++;
+			if (f_count > 1)
+				throw invalidData();
+			if ((line[i] != 'f' && line[i] != '.') && (!(line[i] <= '9' && line[i] >= '0')))
+				throw invalidData();
 			i++;
 		}
-		if (std::atof(value_buff.c_str()) < 0 || std::atof(value_buff.c_str()) > 1000)
-			throw Bitcoin::invalidData();
+		if (std::atof(value_buff.c_str()) < 0 || std::atof(value_buff.c_str()) > 100000)
+		{
+			if (std::atof(value_buff.c_str()) < 0)
+				throw Bitcoin::negativeNumber();
+			else
+				throw Bitcoin::tooBigValue();
+
+		}
 		while (static_cast<size_t>(i) != line.length()){
 			if (line[i] != ' ' && line[i] != '\t' && line[i] != '\0')
 				throw Bitcoin::invalidFormat();
@@ -238,6 +258,16 @@ const char *Bitcoin::invalidData::what() const throw()
 	return (RED "Error thrown : Invalid Data Detected." RESET);
 }
 
+const char *Bitcoin::negativeNumber::what() const throw()
+{
+	return (RED "Error thrown : Negative Number Detected." RESET);
+}
+
+const char *Bitcoin::tooBigValue::what() const throw()
+{
+	return (RED "Error thrown : Value Registered is Too Big (>= 100 000 needed)." RESET);
+}
+
 const char *Bitcoin::invalidFormat::what() const throw()
 {
 	return (RED "Error thrown : Invalid Format Detected. ('YYYY-MM-DD | value' needed)" RESET);
@@ -251,4 +281,14 @@ const char *Bitcoin::invalidFirstLine::what() const throw()
 const char *Bitcoin::doubleData::what() const throw()
 {
 	return (RED "Error thrown : Double Data Detected. (1 value for 1 date needed)" RESET);
+}
+
+const char *Bitcoin::valueNotFound::what() const throw()
+{
+	return (RED "Error thrown : Value Not Found." RESET);
+}
+
+const char *Bitcoin::emptyLine::what() const throw()
+{
+	return (RED "Error thrown : Empty Line." RESET);
 }

@@ -43,7 +43,6 @@ Merger::Merger(char **av, int ac)
 	after(_vectors);
 	printTime(_starting_time, 0);
 
-	//SAME THING FOR SECOND CONTAINER
 	_2ndstarting_time = getTime();
 	for (int i = 1; i < ac; i++)
 	{
@@ -77,8 +76,6 @@ void	Merger::fordJohnson(Container &to_sort)
 {
 	Container main;
 	Container tmp;
-	//sorting our pairs two by two till the end
-	//45 0 226 79 5 9
 	for (size_t i = 0; i < to_sort.size() - 1; i += 2)
 	{
 		if (to_sort[i] > to_sort[i + 1])
@@ -86,38 +83,27 @@ void	Merger::fordJohnson(Container &to_sort)
 			std::swap(to_sort[i], to_sort[i+1]);
 		}
 	}
-	//0 45 79 226 5 9 
-	//in case there is more than two
-	//elements
 	if (to_sort.size() > 2)
 	{
-		//we add even in main and odd in tmp
 		for (size_t i = 0; i < to_sort.size(); i += 2)
 		{
 			main.push_back(to_sort[i]);
 			if (i < to_sort.size() - 1)
 				tmp.push_back(to_sort[i + 1]);
 		}
-		//0 45 79 226 5 9 
-		//main : 0 79 5
-		//tmp : 45 226 9
-		//we sort the main container with recursive
 		fordJohnson(main);
-		//to_sort general = 0 79
-		//main : 0 79
-		//tmp = 45 226 9 5
 		size_t psize = tmp.size();
 		for (size_t i = 0; i < psize; i++)
 		{
 			size_t j = 0;
 			size_t sortIndex = 0;
-			for (; _jackob(j) < i; j++){}
+			for (; getJackhobNumber(j) < i; j++){}
 			if (j)
 			{
-				if (_jackob(j) >= psize - 1)
-					sortIndex = psize - (i - _jackob(j - 1));
+				if (getJackhobNumber(j) >= psize - 1)
+					sortIndex = psize - (i - getJackhobNumber(j - 1));
 				else
-					sortIndex = _jackob(j) + 1 - (i - _jackob(j - 1));
+					sortIndex = getJackhobNumber(j) + 1 - (i - getJackhobNumber(j - 1));
 			}
 			binarySearch(main, tmp[sortIndex]);
 		}
@@ -130,7 +116,7 @@ void	Merger::binarySearch(Container &search, int value)
 {
 	int low = 0;
 	int high = search.size() - 1;
-	
+
 	while (low <= high)
 	{
 		int mid = low + (high - low) / 2;
@@ -144,15 +130,14 @@ void	Merger::binarySearch(Container &search, int value)
 	search.insert(search.begin() + low, value);
 }
 
-
-unsigned int Merger::_jackob(unsigned int n)
+unsigned int Merger::getJackhobNumber(unsigned int n)
 {
 	if (n == 0)
 		return (0);
 	else if (n == 1)
 		return (1);
 	else
-		return (_jackob(n - 1) + 2 * _jackob(n - 2));
+		return (getJackhobNumber(n - 1) + 2 * getJackhobNumber(n - 2));
 }
 
 //=========================================================//
@@ -174,9 +159,10 @@ void	Merger::printTime(time_t start, int type)
 {
 	long long int ending_time = getTime(); 
 	if (type == 0)
-		std::cout << "Temps d'execution avec std::vector : " << BLUE << (ending_time - start) << "ms" << RESET << std::endl;
+		std::cout << "Temps d'execution avec pour " << _size << " elements avec std::vector : " << BLUE << (ending_time - start) << "ms" << RESET << std::endl;
 	else
-		std::cout << "Temps d'execution avec std::deque : " << BLUE << (ending_time - start) << "ms" << RESET << std::endl;
+		std::cout << "Temps d'execution avec pour " << _size << " elements avec std::vector : " << BLUE << (ending_time - start) << "ms" << RESET << std::endl;
+
 }
 
 template<typename Container>

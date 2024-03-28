@@ -1,5 +1,6 @@
 #include "PmergeMe.hpp"
 
+//gets current time in ms
 long long int getTime()
 {
 	struct timeval tv;
@@ -30,7 +31,6 @@ int	main(int ac, char **av)
 {
 	if (ac <= 1)
 		return (std::cout << RED << "Error\n" << RESET << "Bad Usage : './PmergeMe <numbers...>' needed." << std::endl, 0);
-
 	try
 	{
 		if (isFullDigit(ac, av) != true)

@@ -18,7 +18,7 @@
 #define RED "\033[1;31m"
 #define UNDER "\033[4m"
 
-class Merger{
+class Merger {
 	private :
 		std::vector<int> _vectors;
 		std::deque<int> _queue;
@@ -35,7 +35,8 @@ class Merger{
 
 		bool	checkDoublon(int to_check);
 
-		unsigned int _jackob(unsigned int n);
+		unsigned int getJackhobNumber(unsigned int n);
+
 		void	before();
 		void	printTime(time_t start, int type);
 
@@ -50,7 +51,6 @@ class Merger{
 
 };
 
-//get the current time in ms
 long long int getTime();
 
 template<typename Container>

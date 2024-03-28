@@ -62,6 +62,26 @@ class Bitcoin
 			public:
 				virtual const char *what(void) const throw();
 		};
+
+		class negativeNumber : public std::exception {
+			public:
+				virtual const char *what(void) const throw();
+		};
+
+		class tooBigValue : public std::exception {
+			public:
+				virtual const char *what(void) const throw();
+		};
+
+		class valueNotFound : public std::exception {
+			public:
+				virtual const char *what(void) const throw();
+		};
+
+		class emptyLine : public std::exception {
+			public:
+				virtual const char *what(void) const throw();
+		};
 };
 
 #endif
